@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Filter } from 'lucide-react'
 import { useState } from 'react'
 
 const SORT_OPTIONS = [
@@ -52,6 +52,10 @@ export default function Home() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <button title='Filter' className='-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden'>
+             <Filter className='h-5 w-5'/>
+          </button>
         </div>
       </div>
     </main>
