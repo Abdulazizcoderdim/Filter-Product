@@ -12,4 +12,4 @@ export type Product = {
     price: number
 }
 
-export const db = new Index()
+export const db = new Index<Product>()
