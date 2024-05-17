@@ -19,7 +19,7 @@ export default function Home() {
   const [filter, setFilter] = useState({
     sort: 'none',
   })
-  console.log(filter)
+
 
   return (
     <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -61,4 +61,3 @@ export default function Home() {
     </main>
   )
 }
-//28:00
