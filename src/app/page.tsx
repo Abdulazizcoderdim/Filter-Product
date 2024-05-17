@@ -13,6 +13,7 @@ import axios from 'axios'
 import { ChevronDown, Filter } from 'lucide-react'
 import { useState } from 'react'
 import type { Product as TProduct } from '@/db'
+import ProductSkeleton from '@/components/Products/ProductSkeleton'
 
 const SORT_OPTIONS = [
   { name: 'None', value: 'none' },
@@ -25,7 +26,7 @@ export default function Home() {
     sort: 'none',
   })
 
-  const {data: products} = useQuery({
+  const { data: products } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
       const { data } = await axios.post<QueryResult<TProduct>[]>(
@@ -84,18 +85,24 @@ export default function Home() {
         </div>
       </div>
 
-      <section className='pb-24 pt-8'>
-        <div className='grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4'>
-           
-           {/* Filters */}
-           <div></div>
+      <section className="pb-24 pt-8">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+          {/* Filters */}
+          <div></div>
 
-           {/* Product grid */}
-           <ul className='lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8'>
-              {products?.map((product) => (
-                <Product key={product.metadata!.id} product={product.metadata!}/>
-              ))} 
-           </ul>
+          {/* Product grid */}
+          <ul className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {products
+              ? products.map((product) => (
+                  <Product
+                    key={product.metadata!.id}
+                    product={product.metadata!}
+                  />
+                ))
+              : new Array(12)
+                  .fill(null)
+                  .map((_, i) => <ProductSkeleton key={i} />)}
+          </ul>
         </div>
       </section>
     </main>
