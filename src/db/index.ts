@@ -1,6 +1,9 @@
 import { Index } from "@upstash/vector";
+import * as dotenv from 'dotenv'
 
-type Product = {
+dotenv.config()
+
+export type Product = {
     id: string
     imageId: string
     name: string
@@ -9,9 +12,4 @@ type Product = {
     price: number
 }
 
-export const db = new Index(
-// {
-//     token: process.env.UPSTASH_TOKEN,
-//     url: process.env.UPSTASH_URL,
-// }
-)
+export const db = new Index()
