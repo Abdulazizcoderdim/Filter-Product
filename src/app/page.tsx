@@ -14,12 +14,32 @@ import { ChevronDown, Filter } from 'lucide-react'
 import { useState } from 'react'
 import type { Product as TProduct } from '@/db'
 import ProductSkeleton from '@/components/Products/ProductSkeleton'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 
 const SORT_OPTIONS = [
   { name: 'None', value: 'none' },
   { name: 'Price: Low to High', value: 'price-asc' },
   { name: 'Price: High to Low', value: 'price-desc' },
 ] as const
+
+const COLOR_FILTERS = {
+  id: 'color',
+  name: 'Color',
+  options: [
+    {value: 'white', label: 'White'},
+    {value: 'beige', label: 'Beige'},
+    {value: 'blue', label: 'Blue'},
+    {value: 'green', label: 'Green'},
+    {value: 'purple', label: 'Purple'},
+  ] as const
+}
+
+const SUBCATEGORIES = [
+  { name: 'T-Shirts', selected: true, href: '#' },
+  { name: 'Hoodies', selected: false, href: '#' },
+  { name: 'Sweatshirts', selected: false, href: '#' },
+  { name: 'Accessories', selected: false, href: '#' },
+]
 
 export default function Home() {
   const [filter, setFilter] = useState({
@@ -88,7 +108,40 @@ export default function Home() {
       <section className="pb-24 pt-8">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
           {/* Filters */}
-          <div></div>
+          <div className="hidden lg:block">
+            <ul className="space-y-4 border-b border-gray-200 pb-6 text-sm">
+              {SUBCATEGORIES.map((category) => (
+                <li key={category.name}>
+                  <button disabled={!category.selected} className="disabled:cursor-not-allowed disabled:opacity-60">
+                    {category.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <Accordion type='multiple' className='animate-none'>
+               {/* Color filter */}
+               <AccordionItem value='color'>
+                 <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-gray-500'>
+                    <span className='font-medium text-gray-900'>Color</span>
+                 </AccordionTrigger>
+
+                 <AccordionContent className='pt-6 animate-none'>
+                    <ul className='space-y-4'>
+                      {COLOR_FILTERS.options.map((option,optionIdx)=>(
+                        <li className='flex items-center' key={option.value}>
+                           <input className='h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500' type="checkbox" id={`color=${optionIdx}`} />
+                           <label className='ml-3 text-sm text-gray-600' htmlFor={`color=${optionIdx}`}>
+                            {option.label}
+                           </label>
+                        </li> 
+                      ))}
+                    </ul>              
+                 </AccordionContent>
+
+               </AccordionItem>
+            </Accordion>
+          </div>
 
           {/* Product grid */}
           <ul className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
@@ -109,4 +162,4 @@ export default function Home() {
   )
 }
 
-//57:00
+// 1:16:00
