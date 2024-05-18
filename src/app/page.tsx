@@ -85,7 +85,7 @@ export default function Home() {
     queryKey: ['products'],
     queryFn: async () => {
       const { data } = await axios.post<QueryResult<TProduct>[]>(
-        'https://filterproduct.vercel.app/api/products',
+        `${process.env.NEXT_PUBLIC_API_URL}/api/products`,
         {
           filter: {
             sort: filter.sort,
