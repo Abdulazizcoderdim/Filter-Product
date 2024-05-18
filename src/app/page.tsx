@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query'
 import { QueryResult } from '@upstash/vector'
 import axios from 'axios'
 import { ChevronDown, Filter } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { Product as TProduct } from '@/db'
 import ProductSkeleton from '@/components/Products/ProductSkeleton'
 import {
@@ -23,6 +23,7 @@ import {
 import { ProdcutState } from '@/lib/validators/product-validator'
 import { Slider } from '@/components/ui/slider'
 import debounce from 'lodash.debounce'
+import EmptyState from '@/components/Products/EmptyState'
 
 const SORT_OPTIONS = [
   { name: 'None', value: 'none' },
@@ -101,6 +102,9 @@ export default function Home() {
 
   const onSubmit = () => refetch()
 
+  const debouncedSubmit = debounce(onSubmit, 400)
+  const _debouncedSubmit = useCallback(debouncedSubmit,[])
+
   useEffect(()=>{
     onSubmit()
   },[filter])
@@ -126,6 +130,8 @@ export default function Home() {
         [category]: [...prev[category], value],
       }))
     }
+
+    _debouncedSubmit()
 
   }
 
@@ -156,6 +162,7 @@ export default function Home() {
                   key={option.name}
                   onClick={() => {
                     setFilter((prev) => ({ ...prev, sort: option.value }))
+                    _debouncedSubmit()
                   }}
                 >
                   {option.name}
@@ -278,6 +285,8 @@ export default function Home() {
                                 range: [...option.value],
                               },
                             }))
+
+                            _debouncedSubmit()
                           }}
                           checked={
                             !filter.price.isCustom &&
@@ -307,6 +316,8 @@ export default function Home() {
                                 range: [0, 100],
                               },
                             }))
+
+                            _debouncedSubmit()
                           }}
                           checked={filter.price.isCustom}
                           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
@@ -350,6 +361,8 @@ export default function Home() {
                                 range: [newMin, newMax],
                               },
                             }))
+
+                            _debouncedSubmit()
                         }}
                         value={
                           filter.price.isCustom
@@ -370,7 +383,7 @@ export default function Home() {
 
           {/* Product grid */}
           <ul className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {products
+            {products && products.length === 0 ? <EmptyState/> : products
               ? products.map((product) => (
                   <Product
                     key={product.metadata!.id}
@@ -387,4 +400,3 @@ export default function Home() {
   )
 }
 
-// 1:48:00
